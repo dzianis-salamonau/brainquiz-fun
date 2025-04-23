@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrainQuiz - Fun Learning Games</title>
+    <meta name="description" content="Test your knowledge with BrainQuiz - the fun way to learn while you play. Multiple categories, challenging questions, and brain-stimulating fun!">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Inline styles as fallback -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #3494E6, #EC6EAD);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .app-container {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, #3494E6, #EC6EAD);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        
+        .domain-highlight {
+            color: #FFD700;
+            font-weight: 400;
+        }
+        
+        .tagline {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .game-area {
+            padding: 20px;
+        }
+        
+        .btn {
+            background: linear-gradient(to right, #3494E6, #EC6EAD);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 10px 0 20px;
+        }
+        
+        .category-btn, .difficulty-btn {
+            background-color: #f5f5f5;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 10px 15px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        .category-btn.selected, .difficulty-btn.selected {
+            background-color: #3494E6;
+            border-color: #3494E6;
+            color: white;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-top: 1px solid #eee;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .answer-btn {
+            background-color: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            margin-bottom: 10px;
+        }
+        
+        .answer-btn:hover {
+            background-color: #f0f0f0;
+            border-color: #3494E6;
+        }
+        
+        .answer-btn.correct {
+            background: linear-gradient(to right, #32CD32, #4CAF50);
+            color: white;
+            border-color: #4CAF50;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(76, 175, 80, 0.3);
+        }
+        
+        .answer-btn.incorrect {
+            background: linear-gradient(to right, #FF5252, #EC6EAD);
+            color: white;
+            border-color: #EC6EAD;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(236, 110, 173, 0.3);
+        }
+        
+        /* Share overlay */
+        .share-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.75);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .share-container {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .share-container h3 {
+            color: #3494E6;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+        
+        .share-container p {
+            margin-bottom: 20px;
+            line-height: 1.5;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #3494E6;
+        }
+        
+        .share-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .share-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: white;
+        }
+        
+        .twitter {
+            background-color: #1DA1F2;
+        }
+        
+        .facebook {
+            background-color: #4267B2;
+        }
+        
+        .copy {
+            background-color: #6c757d;
+        }
+        
+        .close-share {
+            grid-column: span 2;
+            background: linear-gradient(to right, #3494E6, #EC6EAD);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+    </style>
+    <!-- Google AdSense Code (Replace with your actual AdSense code) -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID" crossorigin="anonymous"></script>
+    <!-- Google Analytics (Replace with your actual Analytics tag) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YOUR_MEASUREMENT_ID"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YOUR_MEASUREMENT_ID');
+    </script>
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="container">
+        <div class="app-container">
+            <header>
+                <h1>BrainQuiz<span class="domain-highlight">.fun</span></h1>
+                <p class="tagline">Challenge your mind, have some fun!</p>
+            </header>
+            
+            <!-- Top Ad Banner -->
+            <div class="ad-container ad-banner">
+                <div class="ad-placeholder">
+                    <!-- AdSense ad will be inserted here -->
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+                         data-ad-slot="YOUR_AD_SLOT_ID"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>
+                         (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+            </div>
+            
+            <div class="game-area">
+                <div id="welcome-screen" class="screen active">
+                    <h2>Welcome to BrainQuiz.fun!</h2>
+                    <p>Put your knowledge to the test with our brain-stimulating questions</p>
+                    
+                    <div class="settings-section">
+                        <div class="difficulty-selector">
+                            <h3>Select Difficulty:</h3>
+                            <div class="difficulty-buttons">
+                                <button class="difficulty-btn" data-difficulty="easy">Easy</button>
+                                <button class="difficulty-btn selected" data-difficulty="medium">Medium</button>
+                                <button class="difficulty-btn" data-difficulty="hard">Hard</button>
+                            </div>
+                        </div>
+                        
+                        <h3>Select Category:</h3>
+                        <div class="categories">
+                            <button class="category-btn" data-category="general">General Knowledge</button>
+                            <button class="category-btn" data-category="science">Science</button>
+                            <button class="category-btn" data-category="history">History</button>
+                            <button class="category-btn" data-category="geography">Geography</button>
+                        </div>
+                    </div>
+                    
+                    <button id="start-btn" class="btn">Start Quiz</button>
+                </div>
+                
+                <div id="quiz-screen" class="screen">
+                    <div class="quiz-header">
+                        <div class="progress-container">
+                            <div id="progress-bar"></div>
+                        </div>
+                        <div class="score-container">
+                            Score: <span id="score">0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="question-container">
+                        <h2 id="question">Question goes here</h2>
+                        <div id="answers" class="answers-container">
+                            <!-- Answers will be inserted here by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="result-screen" class="screen">
+                    <h2>Quiz Complete!</h2>
+                    <div class="result-details">
+                        <p>Your score: <span id="final-score">0</span></p>
+                        <p>Correct answers: <span id="correct-answers">0</span>/<span id="total-questions">0</span></p>
+                    </div>
+                    
+                    <!-- Mid-page Ad -->
+                    <div class="ad-container ad-rectangle">
+                        <div class="ad-placeholder">
+                            <!-- AdSense ad will be inserted here -->
+                            <ins class="adsbygoogle"
+                                 style="display:block"
+                                 data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+                                 data-ad-slot="YOUR_RECTANGLE_AD_SLOT"
+                                 data-ad-format="rectangle"
+                                 data-full-width-responsive="true"></ins>
+                            <script>
+                                 (adsbygoogle = window.adsbygoogle || []).push({});
+                            </script>
+                        </div>
+                    </div>
+                    
+                    <button id="play-again-btn" class="btn">Play Again</button>
+                    <button id="share-btn" class="btn btn-secondary">Share Your Score</button>
+                </div>
+            </div>
+            
+            <!-- Bottom Ad Banner -->
+            <div class="ad-container ad-banner">
+                <div class="ad-placeholder">
+                    <!-- AdSense ad will be inserted here -->
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+                         data-ad-slot="YOUR_BOTTOM_AD_SLOT"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>
+                         (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+            </div>
+            
+            <footer>
+                <p>&copy; <span id="current-year">2025</span> BrainQuiz.fun - All Rights Reserved</p>
+                <div class="footer-links">
+                    <a href="/privacy/">Privacy Policy</a> | 
+                    <a href="/terms/">Terms of Service</a>
+                </div>
+            </footer>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+    <script>
+        // Automatically update the copyright year
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html> 

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found - BrainQuiz.fun</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #3494E6, #EC6EAD);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #3494E6;
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        
+        p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin: 20px 0;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(to right, #3494E6, #EC6EAD);
+            color: white;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            margin-top: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Script for clean URLs */
+        #redirect-message {
+            display: none;
+            font-style: italic;
+            margin-top: 30px;
+            color: #666;
+        }
+    </style>
+    <script>
+        // This script attempts to handle clean URLs for direct access to paths without .html
+        // It checks if the URL path looks like it's missing .html and redirects if needed
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the current path
+            let path = window.location.pathname;
+            
+            // Skip for root or paths that end with / or have file extensions
+            if (path === '/' || path.endsWith('/') || path.includes('.')) return;
+            
+            // Try to redirect to the directory version
+            let newPath = path + '/';
+            let redirectMsg = document.getElementById('redirect-message');
+            
+            redirectMsg.style.display = 'block';
+            redirectMsg.textContent = 'Redirecting to ' + newPath + '...';
+            
+            // Redirect after a short delay
+            setTimeout(function() {
+                window.location.href = newPath;
+            }, 500);
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>404</h1>
+        <h2>Page Not Found</h2>
+        <p>Oops! The page you're looking for doesn't exist or has been moved.</p>
+        <p>Let's get you back to quizzing and learning!</p>
+        <a href="/" class="btn">Back to Home</a>
+        <div id="redirect-message"></div>
+    </div>
+</body>
+</html> 
