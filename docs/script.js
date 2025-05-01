@@ -28,7 +28,8 @@ const apiCategories = {
     'general': 9,    // General Knowledge
     'science': 17,   // Science & Nature
     'history': 23,   // History
-    'geography': 22  // Geography
+    'geography': 22, // Geography
+    'grammar': 24    // Grammar
 };
 
 // Event Listeners
@@ -165,11 +166,198 @@ const questionsDB = {
             answers: ["Gobi", "Kalahari", "Sahara", "Antarctic"],
             correct: 3
         }
+    ],
+    grammar: [
+        {
+            question: "Which sentence is grammatically correct?",
+            answers: ["She don't like apples", "She doesn't like apples", "She not like apples", "She no like apples"],
+            correct: 1
+        },
+        {
+            question: "Choose the correct sentence:",
+            answers: ["I have went to the store", "I have gone to the store", "I have go to the store", "I have going to the store"],
+            correct: 1
+        },
+        {
+            question: "Which sentence uses the correct tense?",
+            answers: ["I am eating dinner when he called", "I was eating dinner when he called", "I eat dinner when he called", "I eaten dinner when he called"],
+            correct: 1
+        },
+        {
+            question: "Select the correct sentence:",
+            answers: ["Their going to the park", "There going to the park", "They're going to the park", "They going to the park"],
+            correct: 2
+        },
+        {
+            question: "Which sentence has the correct subject-verb agreement?",
+            answers: ["The team are playing well", "The team is playing well", "The team were playing well", "The team be playing well"],
+            correct: 1
+        },
+        {
+            question: "Choose the correct sentence:",
+            answers: ["She don't have any money", "She doesn't have any money", "She not have any money", "She no have any money"],
+            correct: 1
+        },
+        {
+            question: "Which sentence uses the correct preposition?",
+            answers: ["I'm good in math", "I'm good at math", "I'm good on math", "I'm good with math"],
+            correct: 1
+        },
+        {
+            question: "Select the correct sentence:",
+            answers: ["He can to swim", "He can swim", "He can swimming", "He can swims"],
+            correct: 1
+        },
+        {
+            question: "Which sentence uses the correct article?",
+            answers: ["I want a apple", "I want an apple", "I want the apple", "I want apple"],
+            correct: 1
+        },
+        {
+            question: "Choose the correct sentence:",
+            answers: ["She is more tall than me", "She is taller than me", "She is more taller than me", "She is tallest than me"],
+            correct: 1
+        }
     ]
 };
 
-// Functions to fetch questions from API
-async function fetchQuestionsFromAPI(amount = 5) {
+// Function to get API key (this allows for different approaches in production vs development)
+function getGeminiApiKey() {
+    // First check if the key is available in the config object
+    if (typeof config !== 'undefined' && config.geminiApiKey) {
+        return config.geminiApiKey;
+    }
+    
+    // For GitHub Pages, we'll use an encrypted version that gets decrypted at runtime
+    // This is security by obscurity, not true security, but better than plaintext in repository
+    const encryptedKey = "QUlaYVN5RDZaeG8yeWZ3V2k5WEtwZ1FFSmRPU1duMkpjb2Q0cVFj"; // Base64 encoded
+    
+    try {
+        // Simple "decryption" (just base64 decoding)
+        return atob(encryptedKey);
+    } catch (e) {
+        console.error('Error retrieving API key:', e);
+        return null;
+    }
+}
+
+// Replace the existing generateGrammarQuestions function with this updated version
+async function generateGrammarQuestions(amount = 10) {
+    try {
+        const apiKey = getGeminiApiKey();
+        
+        if (!apiKey) {
+            throw new Error('No API key available');
+        }
+        
+        const prompt = `Generate ${amount} unique multiple choice English grammar questions with 4 options each. 
+        Each question should test a DIFFERENT grammar concept from this list:
+        - Verb tenses (past, present, future, perfect, progressive)
+        - Prepositions (in, on, at, by, with, etc.)
+        - Articles (a, an, the)
+        - Modal verbs (can, could, may, might, must, etc.)
+        - Conditionals (if clauses)
+        - Relative clauses (who, which, that)
+        - Reported speech
+        - Passive voice
+        - Gerunds and infinitives
+        - Phrasal verbs
+        - Countable/uncountable nouns
+        - Comparative and superlative adjectives
+        - Conjunctions (and, but, or, so, because)
+        - Subject-verb agreement
+        - Question formation
+        
+        Make sure each question is different and covers a different grammar concept.
+        Format the response as a JSON array with this structure:
+        [
+            {
+                "question": "First question text",
+                "answers": ["option1", "option2", "option3", "option4"],
+                "correct": index_of_correct_answer,
+                "concept": "the grammar concept being tested"
+            },
+            {
+                "question": "Second question text",
+                "answers": ["option1", "option2", "option3", "option4"],
+                "correct": index_of_correct_answer,
+                "concept": "the grammar concept being tested"
+            },
+            ... and so on for all ${amount} questions
+        ]`;
+
+        const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + apiKey, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                contents: [{
+                    parts: [{
+                        text: prompt
+                    }]
+                }]
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`API request failed with status ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        if (!data.candidates || !data.candidates[0] || !data.candidates[0].content || !data.candidates[0].content.parts) {
+            throw new Error('Invalid response format from Gemini API');
+        }
+
+        const responseText = data.candidates[0].content.parts[0].text;
+        
+        // Extract JSON array from the response text
+        const jsonMatch = responseText.match(/\[[\s\S]*\]/);
+        if (!jsonMatch) {
+            throw new Error('Invalid response format from Gemini');
+        }
+        
+        const questionsData = JSON.parse(jsonMatch[0]);
+        
+        // Validate the questions data
+        if (!Array.isArray(questionsData) || questionsData.length === 0) {
+            throw new Error('Invalid questions data');
+        }
+        
+        return questionsData;
+    } catch (error) {
+        console.error('Error generating grammar questions:', error);
+        // Fallback to local questions if API fails
+        return getLocalGrammarQuestions(amount);
+    }
+}
+
+// Function to get local grammar questions as fallback
+function getLocalGrammarQuestions(amount) {
+    const localQuestions = questionsDB.grammar;
+    
+    // If we need more questions than available, duplicate and shuffle
+    if (amount > localQuestions.length) {
+        let questions = [];
+        while (questions.length < amount) {
+            questions = [...questions, ...shuffleArray([...localQuestions])];
+        }
+        return questions.slice(0, amount);
+    }
+    
+    // Otherwise just return a random subset
+    return shuffleArray([...localQuestions]).slice(0, amount);
+}
+
+// Modify the fetchQuestionsFromAPI function
+async function fetchQuestionsFromAPI(amount = 10) {
+    if (selectedCategory === 'grammar') {
+        // Generate all grammar questions in a single API call
+        return await generateGrammarQuestions(amount);
+    }
+
+    // Existing API call for other categories
     const categoryId = apiCategories[selectedCategory];
     const url = `https://opentdb.com/api.php?amount=${amount}&category=${categoryId}&difficulty=${difficulty}&type=multiple`;
     
@@ -178,18 +366,11 @@ async function fetchQuestionsFromAPI(amount = 5) {
         const data = await response.json();
         
         if (data.response_code === 0) {
-            // Process the API response properly
             return data.results.map(q => {
-                // Create an array with all answers
                 const allAnswers = [...q.incorrect_answers.map(a => decodeHTML(a))];
-                // Add the correct answer
                 const correctAnswer = decodeHTML(q.correct_answer);
                 allAnswers.push(correctAnswer);
-                
-                // Shuffle the answers
                 const shuffledAnswers = shuffleArray(allAnswers);
-                
-                // Find where the correct answer is now
                 const correctIndex = shuffledAnswers.indexOf(correctAnswer);
                 
                 return {
@@ -203,7 +384,6 @@ async function fetchQuestionsFromAPI(amount = 5) {
         }
     } catch (error) {
         console.error('Error fetching questions:', error);
-        // Fallback to local questions if API fails
         return questionsDB[selectedCategory];
     }
 }

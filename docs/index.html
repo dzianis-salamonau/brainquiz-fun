@@ -218,18 +218,18 @@
             cursor: pointer;
         }
     </style>
-    <!-- Google AdSense Code (Replace with your actual AdSense code) -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID" crossorigin="anonymous"></script>
-    <!-- Google Analytics (Replace with your actual Analytics tag) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YOUR_MEASUREMENT_ID"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0M9JL44SGJ"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-YOUR_MEASUREMENT_ID');
+
+      gtag('config', 'G-0M9JL44SGJ');
     </script>
     <!-- Favicon -->
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="alternate icon" href="favicon.ico" type="image/x-icon">
 </head>
 <body>
     <div class="container">
@@ -238,22 +238,6 @@
                 <h1>BrainQuiz<span class="domain-highlight">.fun</span></h1>
                 <p class="tagline">Challenge your mind, have some fun!</p>
             </header>
-            
-            <!-- Top Ad Banner -->
-            <div class="ad-container ad-banner">
-                <div class="ad-placeholder">
-                    <!-- AdSense ad will be inserted here -->
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
-                         data-ad-slot="YOUR_AD_SLOT_ID"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                    <script>
-                         (adsbygoogle = window.adsbygoogle || []).push({});
-                    </script>
-                </div>
-            </div>
             
             <div class="game-area">
                 <div id="welcome-screen" class="screen active">
@@ -271,11 +255,12 @@
                         </div>
                         
                         <h3>Select Category:</h3>
-                        <div class="categories">
+                        <div class="category-selection">
                             <button class="category-btn" data-category="general">General Knowledge</button>
                             <button class="category-btn" data-category="science">Science</button>
                             <button class="category-btn" data-category="history">History</button>
                             <button class="category-btn" data-category="geography">Geography</button>
+                            <button class="category-btn" data-category="grammar">English Grammar</button>
                         </div>
                     </div>
                     
@@ -307,40 +292,8 @@
                         <p>Correct answers: <span id="correct-answers">0</span>/<span id="total-questions">0</span></p>
                     </div>
                     
-                    <!-- Mid-page Ad -->
-                    <div class="ad-container ad-rectangle">
-                        <div class="ad-placeholder">
-                            <!-- AdSense ad will be inserted here -->
-                            <ins class="adsbygoogle"
-                                 style="display:block"
-                                 data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
-                                 data-ad-slot="YOUR_RECTANGLE_AD_SLOT"
-                                 data-ad-format="rectangle"
-                                 data-full-width-responsive="true"></ins>
-                            <script>
-                                 (adsbygoogle = window.adsbygoogle || []).push({});
-                            </script>
-                        </div>
-                    </div>
-                    
                     <button id="play-again-btn" class="btn">Play Again</button>
                     <button id="share-btn" class="btn btn-secondary">Share Your Score</button>
-                </div>
-            </div>
-            
-            <!-- Bottom Ad Banner -->
-            <div class="ad-container ad-banner">
-                <div class="ad-placeholder">
-                    <!-- AdSense ad will be inserted here -->
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
-                         data-ad-slot="YOUR_BOTTOM_AD_SLOT"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                    <script>
-                         (adsbygoogle = window.adsbygoogle || []).push({});
-                    </script>
                 </div>
             </div>
             
@@ -354,6 +307,7 @@
         </div>
     </div>
     
+    <script src="config.js"></script>
     <script src="script.js"></script>
     <script>
         // Automatically update the copyright year
