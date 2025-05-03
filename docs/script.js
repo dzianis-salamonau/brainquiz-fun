@@ -223,6 +223,8 @@ const questionsDB = {
 
 // Function to get API key (this allows for different approaches in production vs development)
 function getGeminiApiKey() {
+
+    return "AIzaSyDOq0fUPmqwOwWu7etGFE5IlNSvdqAwcv4";
     // First check if the key is available in the config object
     if (typeof config !== 'undefined' && config.geminiApiKey) {
         return config.geminiApiKey;
