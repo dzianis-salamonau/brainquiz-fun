@@ -289,6 +289,7 @@ async function generateGrammarQuestions(amount = 10) {
         // ]`;
 
         const prompt = `Generate ${amount} unique multiple-choice English grammar questions with 4 options each.
+        Target difficulty level for these questions: ${difficulty}.
         Each question must test a DISTINCT grammar concept. Prioritize variety in the chosen concepts from the list below.
         
         Grammar Concepts to Cover (choose ${amount} distinct concepts):
