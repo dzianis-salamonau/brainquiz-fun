@@ -252,40 +252,76 @@ async function generateGrammarQuestions(amount = 10) {
             throw new Error('No API key available');
         }
         
-        const prompt = `Generate ${amount} unique multiple choice English grammar questions with 4 options each. 
-        Each question should test a DIFFERENT grammar concept from this list:
-        - Verb tenses (past, present, future, perfect, progressive)
-        - Prepositions (in, on, at, by, with, etc.)
-        - Articles (a, an, the)
-        - Modal verbs (can, could, may, might, must, etc.)
-        - Conditionals (if clauses)
-        - Relative clauses (who, which, that)
-        - Reported speech
-        - Passive voice
-        - Gerunds and infinitives
-        - Phrasal verbs
-        - Countable/uncountable nouns
-        - Comparative and superlative adjectives
-        - Conjunctions (and, but, or, so, because)
-        - Subject-verb agreement
-        - Question formation
+        // const prompt = `Generate ${amount} unique multiple choice English grammar questions with 4 options each. 
+        // Each question should test a DIFFERENT grammar concept from this list:
+        // - Verb tenses (past, present, future, perfect, progressive)
+        // - Prepositions (in, on, at, by, with, etc.)
+        // - Articles (a, an, the)
+        // - Modal verbs (can, could, may, might, must, etc.)
+        // - Conditionals (if clauses)
+        // - Relative clauses (who, which, that)
+        // - Reported speech
+        // - Passive voice
+        // - Gerunds and infinitives
+        // - Phrasal verbs
+        // - Countable/uncountable nouns
+        // - Comparative and superlative adjectives
+        // - Conjunctions (and, but, or, so, because)
+        // - Subject-verb agreement
+        // - Question formation
         
-        Make sure each question is different and covers a different grammar concept.
+        // Make sure each question is different and covers a different grammar concept.
+        // Format the response as a JSON array with this structure:
+        // [
+        //     {
+        //         "question": "First question text",
+        //         "answers": ["option1", "option2", "option3", "option4"],
+        //         "correct": index_of_correct_answer,
+        //         "concept": "the grammar concept being tested"
+        //     },
+        //     {
+        //         "question": "Second question text",
+        //         "answers": ["option1", "option2", "option3", "option4"],
+        //         "correct": index_of_correct_answer,
+        //         "concept": "the grammar concept being tested"
+        //     },
+        //     ... and so on for all ${amount} questions
+        // ]`;
+
+        const prompt = `Generate ${amount} unique multiple-choice English grammar questions with 4 options each.
+        Each question must test a DISTINCT grammar concept. Prioritize variety in the chosen concepts from the list below.
+        
+        Grammar Concepts to Cover (choose ${amount} distinct concepts):
+        - Verb tenses (e.g., simple past vs. past perfect, future continuous, present perfect progressive)
+        - Prepositions (e.g., prepositions of time, place, movement like 'in', 'on', 'at', 'by', 'with', 'to', 'from')
+        - Articles (a, an, the, zero article)
+        - Modal verbs (e.g., can/could for ability/permission, may/might for possibility, must/should for obligation/advice)
+        - Conditionals (e.g., zero, first, second, third conditional, if clauses)
+        - Relative clauses (defining vs. non-defining, using who, whom, which, that, whose)
+        - Reported speech (statement, question, and command transformations)
+        - Passive voice (contrasted with active voice, different tenses)
+        - Gerunds and infinitives (as subjects, objects, after specific verbs/adjectives)
+        - Common Phrasal verbs (ensure variety, e.g., get up, look after, turn down)
+        - Countable/uncountable nouns (with appropriate quantifiers like 'much', 'many', 'a few', 'a little')
+        - Comparative and superlative adjectives and adverbs (including irregular forms)
+        - Conjunctions (coordinating: and, but, or; subordinating: because, although, while, so, if, when)
+        - Subject-verb agreement (with compound subjects, collective nouns, indefinite pronouns)
+        - Question formation (Wh- questions, yes/no questions, tag questions)
+        
+        Instructions for each question:
+        1. Context: Where appropriate, embed questions within a short, natural-sounding sentence or a very brief real-world scenario (1-2 sentences) to make them more engaging. The grammar concept must be clearly testable within that context.
+        2. Distractors: Ensure the three incorrect options are plausible errors a learner might commonly make related to the specific grammar concept being tested. Avoid overly simple or obviously wrong distractors.
+        3. Uniqueness: Ensure each generated question is unique and genuinely tests a different concept from the list.
+
         Format the response as a JSON array with this structure:
         [
             {
-                "question": "First question text",
+                "question": "Full question text, including any scenario.",
                 "answers": ["option1", "option2", "option3", "option4"],
-                "correct": index_of_correct_answer,
-                "concept": "the grammar concept being tested"
+                "correct": index_of_correct_answer, // 0-indexed
+                "concept": "The specific grammar concept being tested (e.g., 'Verb tenses (future perfect)')"
             },
-            {
-                "question": "Second question text",
-                "answers": ["option1", "option2", "option3", "option4"],
-                "correct": index_of_correct_answer,
-                "concept": "the grammar concept being tested"
-            },
-            ... and so on for all ${amount} questions
+            // ... and so on for all ${amount} questions
         ]`;
 
         const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + apiKey, {
